@@ -1,0 +1,22 @@
+import xml.etree.ElementTree as ET
+
+rpc_root = ET.parse('rpc-reply.xml').getroot()
+## from string ##
+# rpc_root = ET.fromstring(string_name)
+lsp_destinations = {}
+
+for lsp in rpc_root.iter("mpls-lsp"):
+    for lsp_param in lsp.iter():
+        if lsp_param.tag == "destination-address":
+            lsp_destination = lsp_param.text
+        if lsp_param.tag == "lsp-state":
+            lsp_state = lsp_param.text
+        if lsp_param.tag == "name":
+            name = lsp_param.text
+    lsp_destinations[name] = {'lsp-state': lsp_state, 'dest': lsp_destination}
+
+print(f"LSP destinations : {lsp_destinations}")
+
+##
+# LSP destinations : {'BB_BOS50-COR-R4_ARN53-COR-R1_1': {'lsp-state': 'Up', 'dest': '52.93.142.24'}, 'BB_BOS50-COR-R4_ARN53-COR-R2_1': {'lsp-state': 'Up', 'dest': '52.93.142.25'}, 'BB_BOS50-COR-R4_ARN53-COR-R3_1': {'lsp-state': 'Up', 'dest': '52.93.142.26'}, ...
+##
